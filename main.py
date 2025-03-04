@@ -1,4 +1,6 @@
 import currencyapicom
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Alignment, NamedStyle, Font, Border, Side
 from dotenv import load_dotenv
 import os
 
@@ -9,7 +11,7 @@ load_dotenv()
 
 # client = currencyapicom.Client(os.environ['CURRENCY_API'])
 # currencies['eur'] = client.latest('EUR',currencies=['GBP','MUR','USD','ZAR'])
-# currencies['gbp'] = client.latest('GBP',currencies=['EUR','GBP','MUR','USD','ZAR'])
+# currencies['gbp'] = client.latest('GBP',currencies=['EUR','MUR','USD','ZAR'])
 # currencies['mur'] = client.latest('MUR',currencies=['EUR','GBP','USD','ZAR'])
 # currencies['usd'] = client.latest('USD',currencies=['EUR','GBP','MUR','ZAR'])
 # currencies['zar'] = client.latest('ZAR',currencies=['EUR','GBP','MUR','USD'])
@@ -17,40 +19,49 @@ load_dotenv()
 # print(currencies)
 
 
-
-
+# ##############################################################################
 jason = {'eur': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'GBP': {'code': 'GBP', 'value': 0.8254537584}, 'MUR': {'code': 'MUR', 'value': 48.6313845297}, 'USD': {'code': 'USD', 'value': 1.0485146702}, 'ZAR': {'code': 'ZAR', 'value': 19.4908428347}}}, 'gbp': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 1.2114548995}, 'GBP': {'code': 'GBP', 'value': 1}, 'MUR': {'code': 'MUR', 'value': 58.914729059}, 'USD': {'code': 'USD', 'value': 1.2702282344}, 'ZAR': {'code': 'ZAR', 'value': 23.6122770478}}}, 'mur': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.0205628528}, 'GBP': {'code': 'GBP', 'value': 0.0169736841}, 'USD': {'code': 'USD', 'value': 0.0215604528}, 'ZAR': {'code': 'ZAR', 'value': 0.4007873315}}}, 'usd': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.9537300988}, 'GBP': {'code': 'GBP', 'value': 0.7872600946}, 'MUR': {'code': 'MUR', 'value': 46.3812151723}, 'ZAR': {'code': 'ZAR', 'value': 18.5890034624}}}, 'zar': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.0513061446}, 'GBP': {'code': 'GBP', 'value': 0.0423508499}, 'MUR': {'code': 'MUR', 'value': 2.4950888447}, 'USD': {'code': 'USD', 'value': 0.0537952452}}}}
 
+ # Styling setup
+heading_format = NamedStyle(name="heading_format")
+heading_format.font = Font(bold=True, u='single')
+heading_format.alignment = Alignment(horizontal='center')
+
+
+# Open work book
+wb = Workbook()
+ws = wb.active
+
+i = 2
 for x in jason:
     name = x
     date = jason[x]['meta']['last_updated_at'][:10]
+    
+    for y in jason[x]['data']:
+        currency_name = y
+        value = jason[name]['data'][y]['value']
 
-    print(f'{name} | {date} = {jason[x]}')
+        # Create Headings
+        ws['A1'] = 'Currency'
+        ws['B1'] = 'Last Updated'
+        ws['C1'] = 'Value'
 
-# date
-# print()
+        # Input data
+        ws[f'A{i}'] = f'{name.upper()}/{currency_name}'
+        ws[f'B{i}'] = date
+        ws[f'C{i}'] = value
 
+        # Styling
+        ws['A1'].style = heading_format
+        ws['B1'].style = heading_format
+        ws['C1'].style = heading_format
 
+        ws.column_dimensions['A'].width = 9.30
+        ws.column_dimensions['B'].width = 12.08
+        ws.column_dimensions['C'].width = 11.97
 
+        i += 1 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# EUR
-# GBP
-# MUR
-# USD
-# ZAR
+# Save the file
+wb.save("sample.xlsx")
+# wb.close()
