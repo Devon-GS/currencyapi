@@ -7,39 +7,34 @@ import os
 # Load all environment variables from .env 
 load_dotenv()
 
-# currencies = {}
+currencies = {}
 
-# client = currencyapicom.Client(os.environ['CURRENCY_API'])
-# currencies['eur'] = client.latest('EUR',currencies=['GBP','MUR','USD','ZAR'])
-# currencies['gbp'] = client.latest('GBP',currencies=['EUR','MUR','USD','ZAR'])
-# currencies['mur'] = client.latest('MUR',currencies=['EUR','GBP','USD','ZAR'])
-# currencies['usd'] = client.latest('USD',currencies=['EUR','GBP','MUR','ZAR'])
-# currencies['zar'] = client.latest('ZAR',currencies=['EUR','GBP','MUR','USD'])
+client = currencyapicom.Client(os.environ['CURRENCY_API'])
+currencies['eur'] = client.latest('EUR',currencies=['GBP','MUR','USD','ZAR'])
+currencies['gbp'] = client.latest('GBP',currencies=['EUR','MUR','USD','ZAR'])
+currencies['mur'] = client.latest('MUR',currencies=['EUR','GBP','USD','ZAR'])
+currencies['usd'] = client.latest('USD',currencies=['EUR','GBP','MUR','ZAR'])
+currencies['zar'] = client.latest('ZAR',currencies=['EUR','GBP','MUR','USD'])
 
-# print(currencies)
-
-
-# ##############################################################################
-jason = {'eur': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'GBP': {'code': 'GBP', 'value': 0.8254537584}, 'MUR': {'code': 'MUR', 'value': 48.6313845297}, 'USD': {'code': 'USD', 'value': 1.0485146702}, 'ZAR': {'code': 'ZAR', 'value': 19.4908428347}}}, 'gbp': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 1.2114548995}, 'GBP': {'code': 'GBP', 'value': 1}, 'MUR': {'code': 'MUR', 'value': 58.914729059}, 'USD': {'code': 'USD', 'value': 1.2702282344}, 'ZAR': {'code': 'ZAR', 'value': 23.6122770478}}}, 'mur': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.0205628528}, 'GBP': {'code': 'GBP', 'value': 0.0169736841}, 'USD': {'code': 'USD', 'value': 0.0215604528}, 'ZAR': {'code': 'ZAR', 'value': 0.4007873315}}}, 'usd': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.9537300988}, 'GBP': {'code': 'GBP', 'value': 0.7872600946}, 'MUR': {'code': 'MUR', 'value': 46.3812151723}, 'ZAR': {'code': 'ZAR', 'value': 18.5890034624}}}, 'zar': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.0513061446}, 'GBP': {'code': 'GBP', 'value': 0.0423508499}, 'MUR': {'code': 'MUR', 'value': 2.4950888447}, 'USD': {'code': 'USD', 'value': 0.0537952452}}}}
+# jason = {'eur': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'GBP': {'code': 'GBP', 'value': 0.8254537584}, 'MUR': {'code': 'MUR', 'value': 48.6313845297}, 'USD': {'code': 'USD', 'value': 1.0485146702}, 'ZAR': {'code': 'ZAR', 'value': 19.4908428347}}}, 'gbp': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 1.2114548995}, 'GBP': {'code': 'GBP', 'value': 1}, 'MUR': {'code': 'MUR', 'value': 58.914729059}, 'USD': {'code': 'USD', 'value': 1.2702282344}, 'ZAR': {'code': 'ZAR', 'value': 23.6122770478}}}, 'mur': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.0205628528}, 'GBP': {'code': 'GBP', 'value': 0.0169736841}, 'USD': {'code': 'USD', 'value': 0.0215604528}, 'ZAR': {'code': 'ZAR', 'value': 0.4007873315}}}, 'usd': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.9537300988}, 'GBP': {'code': 'GBP', 'value': 0.7872600946}, 'MUR': {'code': 'MUR', 'value': 46.3812151723}, 'ZAR': {'code': 'ZAR', 'value': 18.5890034624}}}, 'zar': {'meta': {'last_updated_at': '2025-03-03T23:59:59Z'}, 'data': {'EUR': {'code': 'EUR', 'value': 0.0513061446}, 'GBP': {'code': 'GBP', 'value': 0.0423508499}, 'MUR': {'code': 'MUR', 'value': 2.4950888447}, 'USD': {'code': 'USD', 'value': 0.0537952452}}}}
 
  # Styling setup
 heading_format = NamedStyle(name="heading_format")
 heading_format.font = Font(bold=True, u='single')
 heading_format.alignment = Alignment(horizontal='center')
 
-
 # Open work book
 wb = Workbook()
 ws = wb.active
 
 i = 2
-for x in jason:
+for x in currencies:
     name = x
-    date = jason[x]['meta']['last_updated_at'][:10]
+    date = currencies[x]['meta']['last_updated_at'][:10]
     
-    for y in jason[x]['data']:
+    for y in currencies[x]['data']:
         currency_name = y
-        value = jason[name]['data'][y]['value']
+        value = currencies[name]['data'][y]['value']
 
         # Create Headings
         ws['A1'] = 'Currency'
@@ -64,4 +59,6 @@ for x in jason:
 
 # Save the file
 wb.save("sample.xlsx")
-# wb.close()
+wb.close()
+
+os.system('start "EXCEL.EXE" "sample.xlsx"')
